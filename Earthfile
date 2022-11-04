@@ -3,23 +3,24 @@ VERSION 0.6
 
 COPY_METADATA:
     COMMAND
+    COPY "./ci" "./ci"
     COPY ".git" ".git"
 
 
 clean-git-history-checking:
     FROM rust
     RUN cargo install clean_git_history
-	DO +COPY_METADATA
+    DO +COPY_METADATA
     ARG from="origin/HEAD"
-    RUN /usr/local/cargo/bin/clean_git_history --from-reference "${from}"
+    RUN ./ci/clean-git-history-checking.sh --from-reference "${from_reference}"
 
 
 conventional-commits-linting:
     FROM rust
     RUN cargo install conventional_commits_linter
-	DO +COPY_METADATA
+    DO +COPY_METADATA
     ARG from="origin/HEAD"
-    RUN /usr/local/cargo/bin/conventional_commits_linter --from-reference "${from}" --allow-angular-type-only
+    RUN ./ci/conventional-commits-linting.sh --from-reference "${from_reference}"
 
 
 INSTALL_LINTING_DEPENDENCIES:
@@ -39,6 +40,7 @@ INSTALL_PAYLOAD_DEPENDENCIES:
 
 COPY_SOURCECODE:
     COMMAND
+    COPY "./ci" "./ci"
     COPY "./src" "./src"
     COPY "./tests" "./tests"
 
@@ -50,7 +52,7 @@ SAVE_OUTPUT:
 
 archlinux-base:
     FROM archlinux:base-devel
-	WORKDIR /tmp/nasm-x86-shellcode-generator
+    WORKDIR /tmp/nasm-x86-shellcode-generator
     RUN pacman -Sy --noconfirm
 
 
@@ -58,14 +60,14 @@ check-formatting:
     FROM +archlinux-base
     DO +INSTALL_LINTING_DEPENDENCIES
     DO +COPY_SOURCECODE
-    RUN find "./src" "./tests" -type f -name "*.c" | xargs -I {} clang-format --dry-run --Werror "{}"
+    RUN ./ci/check-formatting.sh
 
 
 fix-formatting:
     FROM +archlinux-base
     DO +INSTALL_LINTING_DEPENDENCIES
     DO +COPY_SOURCECODE
-    RUN find "./src" "./tests" -type f -name "*.c" | xargs -I {} clang-format -i "{}"
+    RUN ./ci/fix-formatting.sh
     SAVE ARTIFACT "./src" AS LOCAL "./src"
     SAVE ARTIFACT "./tests" AS LOCAL "./tests"
 
