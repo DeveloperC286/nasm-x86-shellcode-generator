@@ -42,6 +42,19 @@ linting:
     RUN find "./src" "./tests" -type f -name "*.c" | xargs -I {} clang-tidy --checks="*,-llvmlibc-restrict-system-libc-headers,-altera-id-dependent-backward-branch,-altera-unroll-loops,-cert-err33-c" --warnings-as-errors="*" "{}"
 
 
+COPY_CI_DATA:
+    COMMAND
+    COPY "./ci" "./ci"
+    COPY ".github" ".github"
+
+
+check-github-actions-workflows-linting:
+    FROM golang:1.20.4
+    RUN go install github.com/rhysd/actionlint/cmd/actionlint@v1.6.24
+    DO +COPY_CI_DATA
+    RUN ./ci/check-github-actions-workflows-linting.sh
+
+
 archlinux-base:
     FROM archlinux:base-devel
     RUN pacman -Sy --noconfirm
