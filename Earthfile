@@ -41,7 +41,7 @@ check-conventional-commits-linting:
 
 
 golang-base:
-    FROM golang:1.24.0@sha256:cd0c949a4709ef70a8dad14274f09bd07b25542de5a1c4812f217087737efd17
+    FROM golang:1.24.0@sha256:44b186e06a8596405ab90557930b2024994045cf20939688809b49af0d245692
     WORKDIR "/nasm-x86-shellcode-generator"
 
 
