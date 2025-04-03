@@ -31,7 +31,7 @@
       ],
       "currentValueTemplate": "{{{ replace '_' '.' currentValue }}}",
       "datasourceTemplate": "docker",
-      "depNameTemplate": "docker.io/library/alpine",
+      "depNameTemplate": "alpine",
       "versioningTemplate": "regex:^(?<major>\\d+)[._](?<minor>\\d+)$",
       "autoReplaceStringTemplate": "# renovate: datasource=repology packageName=alpine_{{{newMajor}}}_{{{newMinor}}}"
     },
