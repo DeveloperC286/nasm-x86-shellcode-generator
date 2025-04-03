@@ -13,9 +13,9 @@ COPY_METADATA:
 
 
 alpine-base:
-    FROM alpine:3.20.3@sha256:1e42bbe2508154c9126d48c2b8a75420c3544343bf86fd041fb7527e017a4b4a
-    # renovate: datasource=repology depName=alpine_3_20/bash versioning=loose
-    ENV BASH_VERSION="5.2.26-r0"
+    FROM alpine:3.21.3@sha256:a8560b36e8b8210634f77d9f7f9efd7ffa463e380b75e2e74aff4511df3ef88c
+    # renovate: datasource=repology depName=alpine_3_21/bash versioning=loose
+    ENV BASH_VERSION="5.2.37-r0"
     RUN apk add --no-cache bash=$BASH_VERSION
     WORKDIR "/nasm-x86-shellcode-generator"
 
@@ -82,10 +82,10 @@ COPY_SOURCECODE:
 
 compile:
     FROM +alpine-base
-    # renovate: datasource=repology depName=alpine_3_20/gcc versioning=loose
-    ENV GCC_VERSION="13.2.1_git20240309-r1"
-    # renovate: datasource=repology depName=alpine_3_20/musl-dev versioning=loose
-    ENV MUSL_VERSION="1.2.5-r1"
+    # renovate: datasource=repology depName=alpine_3_21/gcc versioning=loose
+    ENV GCC_VERSION="14.2.0-r4"
+    # renovate: datasource=repology depName=alpine_3_21/musl-dev versioning=loose
+    ENV MUSL_VERSION="1.2.5-r9"
     RUN apk add --no-cache gcc=$GCC_VERSION musl-dev=$MUSL_VERSION
     DO +COPY_SOURCECODE
     RUN ./ci/compile.sh
