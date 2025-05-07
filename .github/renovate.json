@@ -5,17 +5,17 @@
   ],
   "automerge": true,
   "dockerfile": {
-    "fileMatch": [
-      "(^|/)Earthfile$",
-      "(^|/|\\.)Dockerfile$",
-      "(^|/)Dockerfile[^/]*$"
+    "managerFilePatterns": [
+      "/(^|/)Earthfile$/",
+      "/(^|/|\\.)Dockerfile$/",
+      "/(^|/)Dockerfile[^/]*$/"
     ]
   },
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "^Earthfile$"
+      "managerFilePatterns": [
+        "/^Earthfile$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.+_VERSION=\"(?<currentValue>.*?)\"\\s"
@@ -23,8 +23,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^Earthfile$"
+      "managerFilePatterns": [
+        "/^Earthfile$/"
       ],
       "matchStrings": [
         "# renovate: datasource=repology depName=alpine_(?<currentValue>\\d+[._]\\d+)"
@@ -37,8 +37,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^[.]github/workflows/"
+      "managerFilePatterns": [
+        "/^[.]github/workflows//"
       ],
       "matchStrings": [
         ".*version: (?<currentValue>.*?)\\s"
