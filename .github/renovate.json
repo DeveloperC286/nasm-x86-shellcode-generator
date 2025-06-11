@@ -6,7 +6,6 @@
   "automerge": true,
   "dockerfile": {
     "managerFilePatterns": [
-      "/(^|/)Earthfile$/",
       "/(^|/|\\.)Dockerfile$/",
       "/(^|/)Dockerfile[^/]*$/"
     ]
@@ -15,7 +14,8 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^Earthfile$/"
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.+_VERSION=\"(?<currentValue>.*?)\"\\s"
@@ -24,27 +24,18 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^Earthfile$/"
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
+      "matchStringsStrategy": "recursive",
       "matchStrings": [
-        "# renovate: datasource=repology depName=alpine_(?<currentValue>\\d+[._]\\d+)"
+        "FROM\\s*.*?alpine[.:]?(?<alpineMajor>\\d+)\\.(?<alpineMinor>\\d+)(?:\\n|.)*",
+        "apk\\s+add\\s+(?:\\n|.)*?[^\\\\]\\n",
+        "(?<name>[^\\s=~]+)~?=(?<currentValue>[^\\s=]+)"
       ],
-      "currentValueTemplate": "{{{ replace '_' '.' currentValue }}}",
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "alpine",
-      "versioningTemplate": "regex:^(?<major>\\d+)[._](?<minor>\\d+)$",
-      "autoReplaceStringTemplate": "# renovate: datasource=repology depName=alpine_{{{newMajor}}}_{{{newMinor}}}"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/^[.]github/workflows//"
-      ],
-      "matchStrings": [
-        ".*version: (?<currentValue>.*?)\\s"
-      ],
-      "datasourceTemplate": "github-tags",
-      "depNameTemplate": "earthly/earthly"
+      "datasourceTemplate": "repology",
+      "depNameTemplate": "alpine_{{alpineMajor}}_{{alpineMinor}}/{{name}}",
+      "versioningTemplate": "loose"
     }
   ]
 }
