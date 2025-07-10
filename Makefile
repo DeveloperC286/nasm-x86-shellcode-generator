@@ -28,6 +28,7 @@ SHFMT_VERSION=v3.11.0-alpine@sha256:394d755b6007056a2e6d7537ccdbdcfca01b9855ba91
 check-shell-formatting:
 	docker run $(DOCKER_RUN_OPTS) mvdan/shfmt:$(SHFMT_VERSION) --simplify --diff ./ci/*
 
+# renovate: depName=ghcr.io/google/yamlfmt
 YAMLFMT_VERSION=0.17.0@sha256:b4ebf4ff064f5bcf779ef4799dad1fc52542e137677699210aea2de2b270e97f
 
 .PHONY: check-yaml-formatting
