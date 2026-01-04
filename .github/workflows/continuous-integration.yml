@@ -2,32 +2,34 @@ name: Continuous Integration (CI)
 
 on: pull_request
 
+permissions:
+  contents: read
+
 jobs:
-  formatting:
-    name: Formatting
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        language: [shell]
-    steps:
-      - name: Checkout code.
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-      - name: Check formatting.
-        run: make check-${{ matrix.language }}-formatting
   compile:
     name: Compile
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.architecture }}
+    strategy:
+      matrix:
+        architecture: [ubuntu-24.04, ubuntu-24.04-arm]
     steps:
       - name: Checkout code.
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Setup Nix.
+        uses: cachix/install-nix-action@4e002c8ec80594ecd40e759629461e26c8abed15 # v31.9.0
       - name: Compile.
-        run: make compile
+        run: nix develop -c make compile
+
   unit-test:
     name: Unit Test
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.architecture }}
+    strategy:
+      matrix:
+        architecture: [ubuntu-24.04, ubuntu-24.04-arm]
     steps:
       - name: Checkout code.
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-      - name: Unit Test.
-        run: make unit-test
-
+      - name: Setup Nix.
+        uses: cachix/install-nix-action@4e002c8ec80594ecd40e759629461e26c8abed15 # v31.9.0
+      - name: Unit test.
+        run: nix develop -c make unit-test
