@@ -23,13 +23,14 @@
           hardeningDisable = [ "all" ];
 
           buildInputs = [
+            # YAML formatting.
+            pkgs.yamlfmt
+            # GitHub Actions workflows linting.
+            pkgs.actionlint
             # Compiling.
             pkgs.gcc15
             # Unit testing.
             pkgs.cunit
-            # GitHub Action Workflows.
-            pkgs.yamlfmt
-            pkgs.actionlint
           ];
         };
       }
