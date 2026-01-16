@@ -4,6 +4,16 @@
     "config:best-practices"
   ],
   "automerge": true,
+  "github-actions": {
+    "enabled": false
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "matchFileNames": [".github/workflows/continuous-integration.yml"],
+      "enabled": true
+    }
+  ],
   "nix": {
     "enabled": true,
     "lockFileMaintenance": {
@@ -11,23 +21,5 @@
       "commitMessageAction": "update",
       "commitMessageTopic": "Nix flake lock"
     }
-  },
-  "customManagers": [
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile[^/]*$/"
-      ],
-      "matchStringsStrategy": "recursive",
-      "matchStrings": [
-        "FROM\\s*.*?alpine[.:]?(?<alpineMajor>\\d+)\\.(?<alpineMinor>\\d+)(?:\\n|.)*",
-        "apk\\s+add\\s+(?:\\n|.)*?[^\\\\]\\n",
-        "(?<name>[^\\s=~]+)~?=(?<currentValue>[^\\s=]+)"
-      ],
-      "datasourceTemplate": "repology",
-      "depNameTemplate": "alpine_{{alpineMajor}}_{{alpineMinor}}/{{name}}",
-      "versioningTemplate": "loose"
-    }
-  ]
+  }
 }

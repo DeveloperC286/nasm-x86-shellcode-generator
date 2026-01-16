@@ -3,6 +3,10 @@
   "release-type": "simple",
   "pull-request-title-pattern": "chore: release ${version}",
   "packages": {
-    ".": {}
+    ".": {
+      "extra-files": [
+        "README.md"
+      ]
+    }
   }
 }
