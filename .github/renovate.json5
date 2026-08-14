@@ -4,13 +4,21 @@
     "config:best-practices"
   ],
   "automerge": true,
-  "github-actions": {
-    "enabled": false
-  },
+  // Order matters. applyPackageRules() merges each matching rule over the
+  // previous one, so the last match wins: the broad disable must come first
+  // and the narrow allowlist second.
   "packageRules": [
     {
+      // Copier owns these workflows; Renovate updates would fight the template.
       "matchManagers": ["github-actions"],
-      "matchFileNames": [".github/workflows/continuous-integration.yml"],
+      "enabled": false
+    },
+    {
+      // Except these, which are not part of the Copier template.
+      "matchManagers": ["github-actions"],
+      "matchFileNames": [
+        ".github/workflows/continuous-integration.yml"
+      ],
       "enabled": true
     }
   ],
