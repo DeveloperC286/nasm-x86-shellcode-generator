@@ -46,7 +46,7 @@ In order to execute the unit tests using the CUnit framework you will need to in
 
  * Ubuntu: `apt-get install libcunit1-dev` - Needed to be able to compile CUnit framework tests.
  * Arch: `pacman -Sy cunit` - Needed to be able to compile CUnit framework tests.
- * `make test` - Compiles the CUnit tests and runs then, printing the results to the terminal.
+ * `make unit-test` - Compiles the CUnit tests, producing the `shellcode-generator-tests` binary.
 
 
 ## Usage
@@ -59,12 +59,12 @@ Because of the techniques used to push strings whose length is not a multiple of
 Strings can be padded so as to not affect the behavior but make them a multiple of four.
 
 Below is an example to generate shellcode to call `/usr/bin/whoami`.
-Running `./build.sh` to build the output.c and execute it we can see the length of the shellcode is 39 bytes.
+Running `./shellcode-generator /usr/bin/whoami` to generate `output.c`, then `make payload` to compile and execute it, we can see the length of the shellcode is 39 bytes.
 As `/usr/bin/whoami` is 15 characters in length some techniques have to be used to push the non multiple.
 
 | Command | Generated output.c |
 |---------|--------------------|
-| `./shellcode-generator /usr/bin/whoami` | http://pastebin.com/VjPrTH5B |
+| `./shellcode-generator /usr/bin/whoami` | [examples/whoami.c](examples/whoami.c) |
 
 However paths can be padded with additional '/'s at any directory interval, without affecting the path.
 In the example below one addition '/' is added to the beginning to get the length to 16.
@@ -76,24 +76,24 @@ But only one was needed in this case to get to the optimal multiple of four, any
 
 | Command | Generated output.c |
 |---------|--------------------|
-| `./shellcode-generator //usr/bin/whoami` | http://pastebin.com/6s9XAM8E |
+| `./shellcode-generator //usr/bin/whoami` | [examples/whoami-padded.c](examples/whoami-padded.c) |
 
 Below is a more complicated example, the usage of `/bin/bash -c "<cmds>"` allows multiple commands to be executed within one payload and use the functionality of a Bash environment.
 I.E. usage of $PATH so you don't need a commands full path.
 
 | Command | Generated output.c |
 |---------|--------------------|
-| `./shellcode-generator /bin/bash -c "echo test > test.txt; ls; cat test.txt"` | http://pastebin.com/nvsd1qq3 |
+| `./shellcode-generator /bin/bash -c "echo test > test.txt; ls; cat test.txt"` | [examples/bash-multi-command.c](examples/bash-multi-command.c) |
 
 The above example can be optimised.
 `/bin/bash` is 9 characters in length we could pad it with 3 '/'s to 12 a multiple of 4.
 But doing that produces longer shellcode than leaving it as `/bin/bash`.
 Spaces inside the command can be removed shortening the string length without affecting the command.
-Removing the spaces reduce it to 92 bytes in length, instead of the prior length of 97 bytes.
+Removing the spaces reduce it to 90 bytes in length, instead of the prior length of 95 bytes.
 
 | Command | Generated output.c |
 |---------|--------------------|
-| `./shellcode-generator /bin/bash -c "echo test>test.txt;ls;cat test.txt"` | http://pastebin.com/eYhA7iHg |
+| `./shellcode-generator /bin/bash -c "echo test>test.txt;ls;cat test.txt"` | [examples/bash-multi-command-optimised.c](examples/bash-multi-command-optimised.c) |
 
 
 ## Recommended Resources
